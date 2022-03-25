@@ -1,0 +1,31 @@
+program ejercicio1;
+const
+  FIN=3000;
+type
+  archi=file of integer;
+procedure CargarArchivo(var a:archi); //Paso un archivo siempre por referencia
+var
+  num:integer;
+begin
+    reset(a);
+    writeln('Ingrese un número');
+    readln(num);
+    while(num <> FIN) do
+    begin
+       write(a,num);   //Cargo el archivo
+       readln(num);
+    end;
+    Close(a);
+end;
+
+//PP
+var
+  arcLogico: archi;
+  arcFisico: string[30]; //Nombre que elijo
+begin
+      writeln('Ingrese el nombre del archivo');
+      read(arcFisico);
+      assign(arcLogico, arcFisico);
+      rewrite(arcLogico);
+      CargarArchivo(arcLogico);
+end.
