@@ -13,6 +13,100 @@ ii. Listar en pantalla los empleados de a uno por línea.
 iii. Listar en pantalla empleados mayores de 70 años, próximos a jubilarse.
 
 NOTA: El nombre del archivo a crear o utilizar debe ser proporcionado por el
-usuario una
-única vez.
+usuario una única vez.
 }
+program Ejercicio3;
+const
+  FIN= 'fin';
+  MAYOR=70;
+type
+  cadena15=string[15];
+  empleado= record
+              numEmple:integer;
+              apellido:cadena15;
+              nombre:cadena15;
+              edad:integer;
+              dni:integer;
+            end;
+  archi= file of empleado;
+//procesos
+procedure LeerEmpleado(var e:empleado);
+begin
+  writeln('Ingrese el apellido del empleado');
+  readln(e.apellido);
+  if(e.apellido <> FIN)then
+  begin
+    writeln('Ingrese el numero del empleado');
+    readln(e.numEmple);
+    writeln('Ingrese el nombre del empleado');
+    readln(e.nombre);
+    writeln('Ingrese el edad del empleado');
+    readln(e.edad);
+    writeln('Ingrese el dni del empleado --puede ingresar 00--');
+    readln(e.dni);
+  end;
+end;
+procedure CargarArchivo(var a:archi); //Paso un archivo siempre por referencia
+var
+  e:empleado;
+begin
+    reset(a);
+    LeerEmpleado(e);
+    while(e.apellido <> FIN) do
+    begin
+       write(a,e);   //Cargo el archivo
+       LeerEmpleado(e);
+    end;
+    Close(a);
+end;
+
+procedure RecoImprime(var a:archi);
+var
+   diml, cant: integer;
+    e:empleado; // variable auxiliar para acceder a los empleados del archivo
+    nomApe:cadena15;
+begin
+  reset(a);
+  cant:=0;  //cantidad de empleados mayores a 70 años
+  diml:=0;  // cantidad de empleados que contiene el archivo
+  writeln('Ingrese un nombre y apellido determinado');
+  readln(nomApe);
+  while not EOF(a)do
+  begin
+      read(a,e);
+      if(e.edad > MAYOR )then cant:=cant+1;
+      diml:=diml+1;
+      writeln('Datos del empleado ', diml, ':'); //listado de los empleados que contiene el archivo
+      writeln(e.numEmple);
+      writeln(e.apellido);
+      writeln(e.nombre);
+      writeln(e.edad);
+      writeln(e.dni);
+      writeln(); //espacio entre empleados
+      if(e.nombre = nomApe) or (e.apellido = nomApe)then
+      begin
+          writeln('Empleado con nombre o apellido determinado: ');
+          writeln(e.numEmple);
+          writeln(e.apellido);
+          writeln(e.nombre);
+          writeln(e.edad);
+          writeln(e.dni);
+          writeln(); //espacio entre empleados
+      end;
+  end;
+  Close(a);
+  writeln('La cantidad de empleados mayores de 70 años : ', cant);
+end;
+//PP
+var
+   arcLogico:archi;
+   arcFisico: string[30]; //Nombre que elijo
+begin
+      writeln('Ingrese el nombre del archivo');
+      read(arcFisico);
+      assign(arcLogico, arcFisico);
+      rewrite(arcLogico);
+      CargarArchivo(arcLogico);
+      RecoImprime(arcLogico);
+      readln();
+end.
