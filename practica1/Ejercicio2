@@ -1,0 +1,70 @@
+{
+1. Realizar un algoritmo que cree un archivo de números enteros no ordenados y
+permita incorporar datos al archivo. Los números son ingresados desde teclado.
+El nombre del archivo debe ser proporcionado por el usuario desde teclado. La
+carga finaliza cuando se ingrese el número 30000, que no debe incorporarse al
+archivo.
+
+2. Realizar un algoritmo, que utilizando el archivo de números enteros no
+ordenados creados en el ejercicio 1, informe por pantalla cantidad de números
+menores a 1500 y el promedio de los números ingresados. El nombre del archivo a
+procesar debe ser proporcionado por el usuario una única vez. Además, el
+algoritmo deberá listar el contenido del archivo en pantalla.
+}
+program ejercicio2;
+const
+  FIN=3000;
+  MENOR=1500;
+type
+  archi=file of integer;
+procedure CargarArchivo(var a:archi); //Paso un archivo siempre por referencia
+var
+  num:integer;
+begin
+    reset(a);
+    writeln('Ingrese un número');
+    readln(num);
+    while(num <> FIN) do
+    begin
+       write(a,num);   //Cargo el archivo
+       readln(num);
+    end;
+    Close(a);
+end;
+//procesos
+procedure RecoImprime(var a:archi);
+var
+    suma, diml, cant, prome: integer;
+    num:integer; // variable auxiliar para acceder a los numeros del archivo
+begin
+  reset(a);
+  cant:=0;  //cantidad de numeros menos a 1500
+  diml:=0;  // cantidad de numeros que contiene el archivo
+  suma:=0;
+  while not EOF(a)do
+  begin
+      read(a,num);
+      if(num < MENOR )then cant:=cant+1;
+      diml:=diml+1;
+      suma:=suma+num;
+      writeln(num);  //listado de los números que contiene el archivo
+  end;
+  Close(a);
+  prome:=suma div diml;
+  writeln('La cantidad de números menos a 1500 : ', cant);
+  writeln('El promedio de los números ingresados es: ', prome);
+end;
+//PP
+var
+  arcLogico: archi;
+  arcFisico: string[30]; //Nombre que elijo
+begin
+      writeln('Ingrese el nombre del archivo');
+      read(arcFisico);
+      assign(arcLogico, arcFisico);
+      rewrite(arcLogico);
+      CargarArchivo(arcLogico);
+      writeln('Imprimo el archivo');
+      RecoImprime(arcLogico);
+      readln;
+end.
